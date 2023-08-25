@@ -21,10 +21,11 @@ struct MainView: View {
             }
             
             Spacer()
+                
             if awardIsShowing {
-                GradientRectangles()
-                    .frame(width: 250, height: 250)
-                    .transition(.leadingSlide)
+            CamomileView()
+                .frame(width: 250, height: 250)
+                .transition(.rollInOut)
             }
             
             Spacer()
@@ -41,18 +42,31 @@ struct MainView: View {
 }
 
 extension AnyTransition {
-    static var leadingSlide: AnyTransition {
-        let insertion = AnyTransition.move(edge: .leading)
-            .combined(with: .scale)
-        let removal = AnyTransition.move(edge: .trailing)
-            .combined(with: .scale)
+    static var rollInOut: AnyTransition {
+        let rollIn = AnyTransition.modifier(
+            active: RollModifier(degree: 0),
+            identity: RollModifier(degree: 90))
+            .combined(with: .move(edge: .leading))
         
-        return .asymmetric(insertion: insertion, removal: removal)
+        let rollOut = AnyTransition.modifier(
+            active: RollModifier(degree: 90),
+            identity: RollModifier(degree: 0))
+            .combined(with: .move(edge: .trailing))
+            .combined(with: .opacity)
+        
+        return .asymmetric(insertion: rollIn, removal: rollOut)
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         MainView()
+    }
+}
+
+struct RollModifier: ViewModifier {
+    let degree: Int
+    func body(content: Content) -> some View {
+        content.rotationEffect(.degrees(Double(degree)))
     }
 }
