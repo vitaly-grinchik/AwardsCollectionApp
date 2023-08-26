@@ -7,22 +7,42 @@
 
 import SwiftUI
 
+//struct AwardsView: View {
+//
+//    private let awards = Award.getAwards().filter { $0.awarded }
+//
+//    var body: some View {
+//        NavigationStack {
+//            CustomGridView(items: awards, columns: 2, content: { award in
+//                VStack {
+//                    award.awardView
+//                    Text(award.title)
+//                }
+//            })
+//            .navigationBarTitle("You gained \(awards.count) awards")
+//            .scrollIndicators(.never)
+//        }
+//    }
+//}
+
 struct AwardsView: View {
+    
+    private let awards = Award.getAwards().filter { $0.awarded }
+    private let columns = [GridItem(.adaptive(minimum: 160, maximum: 160))]
+
     var body: some View {
         NavigationStack {
-            VStack {
-                ScrollView {
-                    CamomileView()
-                        .frame(width: 200, height: 200)
-                    GradientRectangles()
-                        .frame(width: 200, height: 200)
-                    PathView()
-                        .frame(width: 200, height: 200)
-                    CurvesView()
-                        .frame(width: 200, height: 200)
+            ScrollView {
+                LazyVGrid(columns: columns) {
+                    ForEach(awards, id: \.title) { award in
+                        VStack {
+                            award.awardView
+                            Text(award.title)
+                        }
+                    }
                 }
             }
-            .navigationBarTitle("Awards")
+            .navigationBarTitle("You've got \(awards.count) awards")
             .scrollIndicators(.never)
         }
     }
