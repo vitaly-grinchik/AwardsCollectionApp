@@ -27,7 +27,7 @@ struct CamomileView: View {
             
             
             // Draw petals
-            ForEach(0..<qtyOfPetals) { angle in
+            ForEach(0..<qtyOfPetals, id: \.self) { angle in
                 Path { path in
                     let petalStart = RadialLocator(
                         center: flowerCenter,
@@ -37,7 +37,7 @@ struct CamomileView: View {
                     
                     let petalEnd = RadialLocator(
                         center: flowerCenter,
-                        radius: middle, // equal to size / 2
+                        radius: middle, // equal to size/2
                         angleDeg: Double(period * angle)
                     )
                     
